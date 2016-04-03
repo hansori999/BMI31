@@ -9,6 +9,26 @@
 import UIKit
 
 class ViewController: UIViewController,UITextFieldDelegate {
+    
+    // Adding Model
+    // No designignagted init() for UIViewController
+    //
+    
+    var weight : Double?
+    var height : Double?
+
+    // Computed property for bmi
+    var bmi: Double? {
+        get {
+          
+            if ( weight != nil) && ( height != nil){
+                return weight! / (height! * height!)
+            } else {
+                return nil
+            }
+               }
+    }
+
 
     @IBOutlet weak var bmiLabel: UILabel!
     
@@ -31,5 +51,38 @@ class ViewController: UIViewController,UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    
+    // Update UI
+    func updateUI() {
+        if let b = self.bmi {
+            self.bmiLabel.text = String (format: "%4.1f", b )
+            
+        }
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        
+        guard let txt: String = textField.text else {
+            return
+        }
+        
+        func conv(numString: String) -> Double? {
+            let result : Double? = NSNumberFormatter().numberFromString(numString)?.doubleValue
+            return result
+        }
+        
+        switch(textField){
+        case heightTextField:
+            self.height = conv(txt)
+        case weightTextField:
+            self.weight = conv(txt)
+        default:
+            print(" Something Wrong")
+            
+        } // end of switch
+        
+        updateUI()
+
+    }// End  Func
 }
 
